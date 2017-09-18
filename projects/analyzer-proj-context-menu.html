@@ -1,0 +1,50 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-menu-button/paper-menu-button.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../../bower_components/paper-item/paper-icon-item.html">
+<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../bower_components/vaadin-context-menu/vaadin-context-menu.html">
+
+<link rel="import" href="./analyzer-proj-context-menu-content.html">
+
+<dom-module id="analyzer-proj-context-menu">
+    <template>
+        <style>
+            :host {
+                display: block;
+            }
+        </style>
+
+        <vaadin-context-menu id="menu">
+            <template>
+                <analyzer-proj-context-menu-content></analyzer-proj-context-menu-content>
+            </template>
+
+            <slot></slot>
+        </vaadin-context-menu>
+    </template>
+
+    <script>
+        class AnalyzerProjContextMenu extends Polymer.Element {
+            static get is() {
+                return 'analyzer-proj-context-menu';
+            }
+
+            open(event) {
+                const menu = this.$.menu;
+
+                if (!menu.opened) {
+                    this._projectId = event.model.item.id;
+                    menu.open(event);
+                } else {
+                    this._projectId = null;
+                    menu.close();
+                }
+            }
+        }
+
+        window.customElements.define(AnalyzerProjContextMenu.is, AnalyzerProjContextMenu);
+    </script>
+</dom-module>
+
