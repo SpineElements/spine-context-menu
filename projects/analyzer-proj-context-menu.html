@@ -1,9 +1,4 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../../bower_components/paper-menu-button/paper-menu-button.html">
-<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../../bower_components/paper-listbox/paper-listbox.html">
-<link rel="import" href="../../bower_components/paper-item/paper-icon-item.html">
-<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../../bower_components/vaadin-context-menu/vaadin-context-menu.html">
 
 <link rel="import" href="./analyzer-proj-context-menu-content.html">
@@ -20,8 +15,6 @@
             <template>
                 <analyzer-proj-context-menu-content></analyzer-proj-context-menu-content>
             </template>
-
-            <slot></slot>
         </vaadin-context-menu>
     </template>
 
@@ -37,9 +30,29 @@
                 if (!menu.opened) {
                     this._projectId = event.model.item.id;
                     menu.open(event);
+
+                    this._alignMenu();
                 } else {
                     this._projectId = null;
                     menu.close();
+                }
+            }
+
+            _alignMenu() {
+                const menuElement = document.querySelector("vaadin-context-menu-overlay");
+                if (menuElement) {
+                    const content = menuElement.$.content;
+                    if (content.scrollWidth > content.clientWidth) {
+                        const diff = content.scrollWidth - content.clientWidth;
+                        menuElement.style.width = (Number.parseInt(menuElement.style.width) + diff) + "px";
+                        menuElement.style.left = (Number.parseInt(menuElement.style.left) - diff) + "px";
+                    }
+
+                    if (content.scrollHeight > content.clientHeight) {
+                        const diff = content.scrollHeight - content.clientHeight;
+                        menuElement.style.height = (Number.parseInt(menuElement.style.height) + diff)+ "px";
+                        menuElement.style.top = (Number.parseInt(menuElement.style.top) - diff) + "px";
+                    }
                 }
             }
         }
