@@ -1,40 +1,36 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../bower_components/vaadin-context-menu/vaadin-context-menu.html">
 
-<link rel="import" href="./analyzer-proj-context-menu-content.html">
-
-<dom-module id="analyzer-proj-context-menu">
-    <template>
-        <style>
-            :host {
-                display: block;
-            }
-        </style>
-
-        <vaadin-context-menu id="menu">
-            <template>
-                <analyzer-proj-context-menu-content></analyzer-proj-context-menu-content>
-            </template>
-        </vaadin-context-menu>
-    </template>
-
+<dom-module id="analyzer-context-menu">
     <script>
-        class AnalyzerProjContextMenu extends Polymer.Element {
+        /**
+         * A context-menu element based on the `vaadin-context-menu`.
+         *
+         * Expands parent functionality adding an ability to adjust position
+         * and size relative to a viewport borders (i.e. when open near the viewport borders).
+         */
+        class AnalyzerContextMenu extends Vaadin.ContextMenuElement {
             static get is() {
-                return 'analyzer-proj-context-menu';
+                return 'analyzer-context-menu';
+            }
+
+            constructor() {
+                super();
+                this._resizeHandler = this._handleResize.bind(this);
+                window.addEventListener("resize", this._resizeHandler);
+            }
+
+            disconnectedCallback() {
+                super.disconnectedCallback();
+                window.removeEventListener("resize", this._resizeHandler);
             }
 
             open(event) {
-                const menu = this.$.menu;
-
-                if (!menu.opened) {
-                    this._projectId = event.model.item.id;
-                    menu.open(event);
-
+                if (!this.opened) {
+                    super.open(event);
                     this._alignMenu();
                 } else {
-                    this._projectId = null;
-                    menu.close();
+                    this.close();
                 }
             }
 
@@ -55,9 +51,15 @@
                     }
                 }
             }
+
+            _handleResize() {
+                if (this.opened) {
+                    this.close();
+                }
+            }
         }
 
-        window.customElements.define(AnalyzerProjContextMenu.is, AnalyzerProjContextMenu);
+        window.customElements.define(AnalyzerContextMenu.is, AnalyzerContextMenu);
     </script>
 </dom-module>
 
