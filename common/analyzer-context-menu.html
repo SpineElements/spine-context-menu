@@ -7,7 +7,7 @@
          * A context-menu element based on the `vaadin-context-menu`.
          *
          * Expands parent functionality adding an ability to adjust position
-         * and size relative to a viewport borders (i.e. when open near the viewport borders).
+         * relative to the viewport borders (i.e. when open near the viewport borders).
          */
         class AnalyzerContextMenu extends Vaadin.ContextMenuElement {
             static get is() {
@@ -17,7 +17,9 @@
             constructor() {
                 super();
                 this._resizeHandler = this._handleResize.bind(this);
+                this._keydownHandler = this._handleKeyDown.bind(this);
                 window.addEventListener("resize", this._resizeHandler);
+                window.addEventListener("keydown", this._keydownHandler, true);
             }
 
             disconnectedCallback() {
@@ -28,34 +30,75 @@
             open(event) {
                 if (!this.opened) {
                     super.open(event);
-                    this._alignMenu();
+                    this._alignPopup(event);
                 } else {
                     this.close();
                 }
             }
 
-            _alignMenu() {
+            _alignPopup(event) {
+                const targetCords = event.target.getBoundingClientRect();
                 const menuElement = document.querySelector("vaadin-context-menu-overlay");
+                const container = menuElement.parentNode;
+                const indent = 8;
+
                 if (menuElement) {
                     const content = menuElement.$.content;
-                    if (content.scrollWidth > content.clientWidth) {
-                        const diff = content.scrollWidth - content.clientWidth;
-                        menuElement.style.width = (Number.parseInt(menuElement.style.width) + diff) + "px";
-                        menuElement.style.left = (Number.parseInt(menuElement.style.left) - diff) + "px";
+                    const width = this._elementMaxWidth(content);
+                    const height = this._elementMaxHeight(content);
+
+                    if (targetCords.left + width + indent < container.clientWidth) {
+                        menuElement.style.left = targetCords.left + "px";
+                    } else if (targetCords.right - width - indent > 0) {
+                        menuElement.style.left = targetCords.right - content.scrollWidth + "px";
+                    } else {
+                        menuElement.style.left = indent + "px";
                     }
 
-                    if (content.scrollHeight > content.clientHeight) {
-                        const diff = content.scrollHeight - content.clientHeight;
-                        menuElement.style.height = (Number.parseInt(menuElement.style.height) + diff)+ "px";
-                        menuElement.style.top = (Number.parseInt(menuElement.style.top) - diff) + "px";
+                    if (targetCords.bottom + height + indent * 2 < container.clientHeight) {
+                        menuElement.style.top = targetCords.bottom + indent + "px";
+                    } else if (targetCords.top - height - indent * 2 > 0) {
+                        menuElement.style.top = targetCords.top - content.scrollHeight - indent + "px";
+                    } else {
+                        menuElement.style.top = indent + "px";
                     }
                 }
+            }
+
+            _elementMaxWidth(elem) {
+                return this._getElementMaxSize(elem, "Width");
+            }
+
+            _elementMaxHeight(elem) {
+                return this._getElementMaxSize(elem, "Height");
+            }
+
+            _getElementMaxSize(elem, sizeParam) {
+                return Math.max(elem['scroll' + sizeParam], elem['client' + sizeParam]);
             }
 
             _handleResize() {
                 if (this.opened) {
                     this.close();
                 }
+            }
+
+            _handleKeyDown(event) {
+                if (this._isTabKey(event) || this._isEscKey(event)) {
+                    this.close();
+                }
+            }
+
+            _isTabKey(event) {
+                return event.key === "Tab" ||
+                    (event.detail && event.detail.key === "Tab") ||
+                    event.keyCode === 9;
+            }
+
+            _isEscKey(event) {
+                return event.key === "Escape" ||
+                    (event.detail && event.detail.key === "Escape") ||
+                    event.keyCode === 27;
             }
         }
 
