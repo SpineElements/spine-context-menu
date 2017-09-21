@@ -14,6 +14,19 @@
                 return 'analyzer-context-menu';
             }
 
+            static get properties() {
+                return {
+                    /**
+                     * An indent in pixels between the target element and the popup.
+                     * Default value: 8px;
+                     */
+                    indent: {
+                        type: Number,
+                        value: 8
+                    }
+                }
+            }
+
             constructor() {
                 super();
                 this._resizeHandler = this._handleResize.bind(this);
@@ -41,7 +54,7 @@
                 const targetCords = event.target.getBoundingClientRect();
                 const menuElement = document.querySelector("vaadin-context-menu-overlay");
                 const container = menuElement.parentNode;
-                const indent = 8;
+                const indent = this.indent;
 
                 if (menuElement) {
                     const content = menuElement.$.content;
