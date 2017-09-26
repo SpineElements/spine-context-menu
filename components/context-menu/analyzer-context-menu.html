@@ -109,8 +109,8 @@
             }
 
             _isTabKey(event) {
-                return event.key === "Tab" ||
-                    (event.detail && event.detail.key === "Tab") ||
+                return event.key.toLowerCase() === "tab" ||
+                    (event.detail && event.detail.key.toLowerCase() === "tab") ||
                     event.keyCode === 9;
             }
 
