@@ -8,6 +8,11 @@
          *
          * Expands parent functionality adding an ability to adjust position
          * relative to the viewport borders (i.e. when open near the viewport borders).
+         *
+         * This element is intended to handle the stacking contexts problem
+         * (@see https://github.com/PolymerElements/paper-menu-button/issues/9#issuecomment-199478430 ,
+         *  https://github.com/PolymerElements/iron-overlay-behavior/pull/155).
+         * If no stacking contexts expected, use `analyzer-dropdown-menu` instead.
          */
         class AnalyzerContextMenu extends Vaadin.ContextMenuElement {
             static get is() {
