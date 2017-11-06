@@ -1,0 +1,36 @@
+<link rel="import" href="../polymer/polymer-element.html">
+
+<dom-module id="spine-context-menu">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <h2>Hello [[prop1]]!</h2>
+  </template>
+
+  <script>
+    /**
+     * `spine-context-menu`
+     * An extension of the `vaadin-context-menu` with enhanced positioning and keyboard control
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class SpineContextMenu extends Polymer.Element {
+      static get is() { return 'spine-context-menu'; }
+      static get properties() {
+        return {
+          prop1: {
+            type: String,
+            value: 'spine-context-menu'
+          }
+        };
+      }
+    }
+
+    window.customElements.define(SpineContextMenu.is, SpineContextMenu);
+  </script>
+</dom-module>
