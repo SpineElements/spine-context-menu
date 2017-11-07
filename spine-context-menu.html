@@ -5,15 +5,15 @@
     <script>
         {
             /**
-             * `spine-context-menu`
-             * An extension of the `vaadin-context-menu` with enhanced positioning and keyboard control.
+             * An extension of the [`vaadin-context-menu`](https://github.com/vaadin/vaadin-context-menu)
+             * with enhanced positioning and keyboard control.
              *
              * Expands parent functionality adding an ability to adjust position
              * relative to the viewport borders (i.e. when open near the viewport borders).
              *
              * This element is intended to handle the stacking contexts problem
-             * (@see https://github.com/PolymerElements/paper-menu-button/issues/9#issuecomment-199478430 ,
-             *  https://github.com/PolymerElements/iron-overlay-behavior/pull/155).
+             * (for details see GitHub [issue](https://github.com/PolymerElements/paper-menu-button/issues/9#issuecomment-199478430),
+             *  and [PR](https://github.com/PolymerElements/iron-overlay-behavior/pull/155)).
              *
              * @customElement
              * @polymer
@@ -43,11 +43,17 @@
                             value: window
                         },
 
+                        /**
+                         * The pixel value to be added to the dropdown vertical position.
+                         */
                         verticalOffset: {
                             type: Number,
                             value: 0
                         },
 
+                        /**
+                         * The pixel value to be added to the dropdown horizontal position.
+                         */
                         horizontalOffset: {
                             type: Number,
                             value: 0
