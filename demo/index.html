@@ -1,8 +1,9 @@
 <!doctype html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+    <meta name="viewport"
+          content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
     <title>spine-context-menu demo</title>
 
@@ -13,18 +14,43 @@
     <link rel="import" href="../spine-context-menu.html">
 
     <custom-style>
-      <style is="custom-style" include="demo-pages-shared-styles">
-      </style>
+        <style is="custom-style" include="demo-pages-shared-styles">
+        </style>
     </custom-style>
-  </head>
-  <body>
-    <div class="vertical-section-container centered">
-      <h3>Basic spine-context-menu demo</h3>
-      <demo-snippet>
+</head>
+<body>
+<div class="vertical-section-container centered">
+    <h3>Basic spine-context-menu demo</h3>
+    <demo-snippet>
         <template>
-          <spine-context-menu></spine-context-menu>
+            <spine-context-menu>
+                <template>
+                    <div style="width: 200px; height: 200px; background: rebeccapurple;
+                        line-height: 200px; text-align: center; color: white;">Dropdown content
+                    </div>
+                </template>
+                <div style="width: 100%; height: 500px; background: cyan;
+                    line-height: 500px; text-align: center; color: white;">Right click me
+                </div>
+            </spine-context-menu>
         </template>
-      </demo-snippet>
-    </div>
-  </body>
+    </demo-snippet>
+</div>
+
+<div class="vertical-section-container centered">
+    <h3>Target spine-context-menu demo</h3>
+    <demo-snippet>
+        <template>
+            <spine-context-menu no-overlap vertical-offset="8" open-on="click" selector="button">
+                <template>
+                    <div style="width: 200px; height: 200px; background: rebeccapurple;
+                        line-height: 200px; text-align: center; color: white;">Dropdown content
+                    </div>
+                </template>
+                <button>Open</button>
+            </spine-context-menu>
+        </template>
+    </demo-snippet>
+</div>
+</body>
 </html>
