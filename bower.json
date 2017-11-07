@@ -3,7 +3,9 @@
   "description": "An extension of the `vaadin-context-menu` with enhanced positioning and keyboard control",
   "main": "spine-context-menu.html",
   "dependencies": {
-    "polymer": "Polymer/polymer#^2.0.0"
+    "polymer": "Polymer/polymer#^2.0.0",
+    "vaadin-context-menu": "3.0.0-beta1",
+    "iron-test-helpers": "^2.0.0"
   },
   "devDependencies": {
     "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^2.0.0",
