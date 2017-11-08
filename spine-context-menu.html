@@ -1,7 +1,7 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/vaadin-context-menu/vaadin-context-menu.html">
 
-<dom-module id="analyzer-context-menu">
+<dom-module id="spine-context-menu">
     <script>
         /**
          * A context-menu element based on the `vaadin-context-menu`.
@@ -14,9 +14,9 @@
          *  https://github.com/PolymerElements/iron-overlay-behavior/pull/155).
          * If no stacking contexts expected, use `analyzer-dropdown-menu` instead.
          */
-        class AnalyzerContextMenu extends Vaadin.ContextMenuElement {
+        class SpineContextMenu extends Vaadin.ContextMenuElement {
             static get is() {
-                return 'analyzer-context-menu';
+                return 'spine-context-menu';
             }
 
             static get properties() {
@@ -121,7 +121,7 @@
             }
         }
 
-        window.customElements.define(AnalyzerContextMenu.is, AnalyzerContextMenu);
+        window.customElements.define(SpineContextMenu.is, SpineContextMenu);
     </script>
 </dom-module>
 
