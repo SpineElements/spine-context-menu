@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<!--
+  ~ Copyright (c) 2000-2017 TeamDev Ltd. All rights reserved.
+  ~ TeamDev PROPRIETARY and CONFIDENTIAL.
+  ~ Use is subject to license terms.
+  -->
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+  <style>
+    html, body, iframe, iron-doc-element, #demo {
+      height: 100%;
+      border: none;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      margin: 0;
+    }
+
+    iframe {
+      width: 100%;
+    }
+
+    iron-doc-element {
+      padding: 48px 16px 16px;
+      display: none;
+    }
+
+    #demo {
+      position: relative;
+      padding: 48px 0 0;
+      display: none;
+    }
+
+    #header {
+      position: fixed;
+      width: 100%;
+      top: 0;
+      left: 0;
+      background-color: #5B6E8C;
+      z-index: 1000;
+    }
+
+    #header[shadowbelow="true"] {
+      box-shadow: var(--shadow-elevation-3dp_-_box-shadow);
+    }
+
+    #header > button {
+      font-family: Robot, sans-serif;
+      font-size: 14px;
+      background-color: inherit;
+      color: white;
+      float: left;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      padding: 16px 16px;
+      transition: .3s;
+    }
+
+    #header > button:hover {
+      background-color: rgba(0, 0, 0, .12);
+    }
+
+    #header > button[active="true"] {
+      background-color: rgba(0, 0, 0, .24);
+    }
+
+    .demo-placeholder {
+      font-family: Robot, sans-serif;
+      font-size: 20px;
+      color: var(--light-theme-secondary-color);
+      position: relative;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    #demo-icon {
+      width: 40px;
+      height: 40px;
+      float: left;
+      padding: 4px 15px 0 16px;
+    }
+
+    .st0{fill-rule:evenodd;clip-rule:evenodd;fill:white;}
+    .st1{fill-rule:evenodd;clip-rule:evenodd;fill:white;}
+  </style>
+
+  <title>spine-context-menu</title>
+
+  <script src="../webcomponentsjs/webcomponents-loader.js"></script>
+
+  <link rel="import" href="../polymer/polymer.html">
+  <link rel="import" href="../iron-doc-viewer/iron-doc-element.html">
+</head>
+<body>
+  <div id="header" onclick="handleTabChange(event)">
+    <a id="demo-icon" href="https://github.com/SpineElements">
+      <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+         viewBox="0 0 34 34" style="enable-background:new 0 0 34 34;" xml:space="preserve">
+      <g>
+        <path class="st0" d="M25.7,28L33,17L25.7,6v1.9l6,9.1l-6,9.1V28L25.7,28z M8.3,28L1,17L8.3,6v1.9l-6,9.1l6,9.1V28L8.3,28z"/>
+        <path class="st1" d="M9.7,14.8c4.9,0,9.7,0,14.6,0c0.3,0,0.5,0.5,0.5,0.7c0,0.9,0,1.9,0,2.8c0,0.3-0.2,0.5-0.5,0.5
+          c-4.9,0-9.7,0-14.6,0c-0.3,0-0.5-0.2-0.5-0.5c0-0.9,0-1.9,0-2.8C9.2,15.3,9.5,14.8,9.7,14.8L9.7,14.8z M22.7,16
+          c-0.5,0-0.8,0.4-0.8,0.8c0,0.5,0.4,0.8,0.8,0.8c0.5,0,0.8-0.4,0.8-0.8C23.5,16.4,23.2,16,22.7,16L22.7,16z M9.7,20.8h14.6
+          c0.3,0,0.5,0.5,0.5,0.7v2.8c0,0.3-0.2,0.5-0.5,0.5H9.7c-0.3,0-0.5-0.2-0.5-0.5v-2.8C9.2,21.3,9.5,20.8,9.7,20.8L9.7,20.8z
+           M22.7,21.9c-0.5,0-0.8,0.4-0.8,0.8c0,0.5,0.4,0.8,0.8,0.8c0.5,0,0.8-0.4,0.8-0.8C23.5,22.3,23.2,21.9,22.7,21.9L22.7,21.9z
+           M9.7,8.9h14.6c0.3,0,0.5,0.5,0.5,0.7v2.8c0,0.3-0.2,0.5-0.5,0.5H9.7c-0.3,0-0.5-0.2-0.5-0.5V9.6C9.2,9.4,9.5,8.9,9.7,8.9L9.7,8.9z
+           M22.7,10c-0.5,0-0.8,0.4-0.8,0.8c0,0.5,0.4,0.8,0.8,0.8c0.5,0,0.8-0.4,0.8-0.8C23.5,10.4,23.2,10,22.7,10L22.7,10z"/>
+      </g>
+      </svg>
+    </a>
+    <button contentid="spine-context-menu">spine-context-menu</button>
+    <button contentid="demo">DEMO</button>
+  </div>
+
+  <iron-doc-element descriptor="{&quot;description&quot;:&quot;An extension of the [`vaadin-context-menu`](https://github.com/vaadin/vaadin-context-menu)\nwith enhanced positioning and keyboard control.\n\nExpands parent functionality adding an ability to adjust position\nrelative to the viewport borders (i.e. when open near the viewport borders).\n\nThis element is intended to handle the stacking contexts problem\n(for details see GitHub [issue](https://github.com/PolymerElements/paper-menu-button/issues/9#issuecomment-199478430),\n and [PR](https://github.com/PolymerElements/iron-overlay-behavior/pull/155)).&quot;,&quot;summary&quot;:&quot;&quot;,&quot;path&quot;:&quot;spine-context-menu.html&quot;,&quot;properties&quot;:[{&quot;name&quot;:&quot;noOverlap&quot;,&quot;type&quot;:&quot;boolean&quot;,&quot;description&quot;:&quot;If true, a dropdown content is rendered without overlapping the trigger element.&quot;,&quot;privacy&quot;:&quot;public&quot;,&quot;sourceRange&quot;:{&quot;start&quot;:{&quot;line&quot;:31,&quot;column&quot;:24},&quot;end&quot;:{&quot;line&quot;:34,&quot;column&quot;:25}},&quot;metadata&quot;:{&quot;polymer&quot;:{}},&quot;defaultValue&quot;:&quot;false&quot;},{&quot;name&quot;:&quot;fitInto&quot;,&quot;type&quot;:&quot;Object&quot;,&quot;description&quot;:&quot;The element to fit the dropdown content into.\nBy default, the window element is used.&quot;,&quot;privacy&quot;:&quot;public&quot;,&quot;sourceRange&quot;:{&quot;start&quot;:{&quot;line&quot;:40,&quot;column&quot;:24},&quot;end&quot;:{&quot;line&quot;:43,&quot;column&quot;:25}},&quot;metadata&quot;:{&quot;polymer&quot;:{}}},{&quot;name&quot;:&quot;verticalOffset&quot;,&quot;type&quot;:&quot;number&quot;,&quot;description&quot;:&quot;The pixel value to be added to the dropdown vertical position.&quot;,&quot;privacy&quot;:&quot;public&quot;,&quot;sourceRange&quot;:{&quot;start&quot;:{&quot;line&quot;:48,&quot;column&quot;:24},&quot;end&quot;:{&quot;line&quot;:51,&quot;column&quot;:25}},&quot;metadata&quot;:{&quot;polymer&quot;:{}},&quot;defaultValue&quot;:&quot;0&quot;},{&quot;name&quot;:&quot;horizontalOffset&quot;,&quot;type&quot;:&quot;number&quot;,&quot;description&quot;:&quot;The pixel value to be added to the dropdown horizontal position.&quot;,&quot;privacy&quot;:&quot;public&quot;,&quot;sourceRange&quot;:{&quot;start&quot;:{&quot;line&quot;:56,&quot;column&quot;:24},&quot;end&quot;:{&quot;line&quot;:59,&quot;column&quot;:25}},&quot;metadata&quot;:{&quot;polymer&quot;:{}},&quot;defaultValue&quot;:&quot;0&quot;}],&quot;methods&quot;:[{&quot;name&quot;:&quot;open&quot;,&quot;description&quot;:&quot;&quot;,&quot;privacy&quot;:&quot;public&quot;,&quot;sourceRange&quot;:{&quot;start&quot;:{&quot;line&quot;:77,&quot;column&quot;:16},&quot;end&quot;:{&quot;line&quot;:84,&quot;column&quot;:17}},&quot;metadata&quot;:{},&quot;params&quot;:[{&quot;name&quot;:&quot;event&quot;}]},{&quot;name&quot;:&quot;disconnectedCallback&quot;,&quot;description&quot;:&quot;&quot;,&quot;privacy&quot;:&quot;public&quot;,&quot;sourceRange&quot;:{&quot;start&quot;:{&quot;line&quot;:71,&quot;column&quot;:16},&quot;end&quot;:{&quot;line&quot;:75,&quot;column&quot;:17}},&quot;metadata&quot;:{},&quot;params&quot;:[]},{&quot;name&quot;:&quot;_position&quot;,&quot;description&quot;:&quot;&quot;,&quot;privacy&quot;:&quot;protected&quot;,&quot;sourceRange&quot;:{&quot;start&quot;:{&quot;line&quot;:86,&quot;column&quot;:16},&quot;end&quot;:{&quot;line&quot;:94,&quot;column&quot;:17}},&quot;metadata&quot;:{},&quot;params&quot;:[{&quot;name&quot;:&quot;event&quot;}]},{&quot;name&quot;:&quot;_positionAroundTarget&quot;,&quot;description&quot;:&quot;&quot;,&quot;privacy&quot;:&quot;protected&quot;,&quot;sourceRange&quot;:{&quot;start&quot;:{&quot;line&quot;:96,&quot;column&quot;:16},&quot;end&quot;:{&quot;line&quot;:122,&quot;column&quot;:17}},&quot;metadata&quot;:{},&quot;params&quot;:[{&quot;name&quot;:&quot;targetCords&quot;},{&quot;name&quot;:&quot;dropdown&quot;}]},{&quot;name&quot;:&quot;_eventCordsToTarget&quot;,&quot;description&quot;:&quot;&quot;,&quot;privacy&quot;:&quot;protected&quot;,&quot;sourceRange&quot;:{&quot;start&quot;:{&quot;line&quot;:124,&quot;column&quot;:16},&quot;end&quot;:{&quot;line&quot;:139,&quot;column&quot;:17}},&quot;metadata&quot;:{},&quot;params&quot;:[{&quot;name&quot;:&quot;event&quot;}]},{&quot;name&quot;:&quot;_isButtonEvent&quot;,&quot;description&quot;:&quot;&quot;,&quot;privacy&quot;:&quot;protected&quot;,&quot;sourceRange&quot;:{&quot;start&quot;:{&quot;line&quot;:141,&quot;column&quot;:16},&quot;end&quot;:{&quot;line&quot;:145,&quot;column&quot;:17}},&quot;metadata&quot;:{},&quot;params&quot;:[{&quot;name&quot;:&quot;event&quot;}]},{&quot;name&quot;:&quot;_handleResize&quot;,&quot;description&quot;:&quot;&quot;,&quot;privacy&quot;:&quot;protected&quot;,&quot;sourceRange&quot;:{&quot;start&quot;:{&quot;line&quot;:147,&quot;column&quot;:16},&quot;end&quot;:{&quot;line&quot;:151,&quot;column&quot;:17}},&quot;metadata&quot;:{},&quot;params&quot;:[]},{&quot;name&quot;:&quot;_handleKeyDown&quot;,&quot;description&quot;:&quot;&quot;,&quot;privacy&quot;:&quot;protected&quot;,&quot;sourceRange&quot;:{&quot;start&quot;:{&quot;line&quot;:153,&quot;column&quot;:16},&quot;end&quot;:{&quot;line&quot;:157,&quot;column&quot;:17}},&quot;metadata&quot;:{},&quot;params&quot;:[{&quot;name&quot;:&quot;event&quot;}]},{&quot;name&quot;:&quot;_isTabKey&quot;,&quot;description&quot;:&quot;&quot;,&quot;privacy&quot;:&quot;protected&quot;,&quot;sourceRange&quot;:{&quot;start&quot;:{&quot;line&quot;:159,&quot;column&quot;:16},&quot;end&quot;:{&quot;line&quot;:163,&quot;column&quot;:17}},&quot;metadata&quot;:{},&quot;params&quot;:[{&quot;name&quot;:&quot;event&quot;}]},{&quot;name&quot;:&quot;_isEscKey&quot;,&quot;description&quot;:&quot;&quot;,&quot;privacy&quot;:&quot;protected&quot;,&quot;sourceRange&quot;:{&quot;start&quot;:{&quot;line&quot;:165,&quot;column&quot;:16},&quot;end&quot;:{&quot;line&quot;:169,&quot;column&quot;:17}},&quot;metadata&quot;:{},&quot;params&quot;:[{&quot;name&quot;:&quot;event&quot;}]}],&quot;staticMethods&quot;:[],&quot;demos&quot;:[{&quot;url&quot;:&quot;demo/index.html&quot;,&quot;description&quot;:&quot;&quot;}],&quot;metadata&quot;:{},&quot;sourceRange&quot;:{&quot;start&quot;:{&quot;line&quot;:21,&quot;column&quot;:12},&quot;end&quot;:{&quot;line&quot;:170,&quot;column&quot;:13}},&quot;privacy&quot;:&quot;public&quot;,&quot;superclass&quot;:&quot;HTMLElement&quot;,&quot;name&quot;:&quot;SpineContextMenu&quot;,&quot;attributes&quot;:[{&quot;name&quot;:&quot;selector&quot;,&quot;description&quot;:&quot;CSS selector that can be used to target any child element\nof the context menu to listen for `openOn` events.&quot;,&quot;sourceRange&quot;:{&quot;file&quot;:&quot;bower_components\\vaadin-context-menu\\vaadin-context-menu.html&quot;,&quot;start&quot;:{&quot;line&quot;:217,&quot;column&quot;:12},&quot;end&quot;:{&quot;line&quot;:219,&quot;column&quot;:13}},&quot;metadata&quot;:{},&quot;type&quot;:&quot;string&quot;,&quot;inheritedFrom&quot;:&quot;Vaadin.ContextMenuElement&quot;},{&quot;name&quot;:&quot;opened&quot;,&quot;description&quot;:&quot;True if the overlay is currently displayed.&quot;,&quot;sourceRange&quot;:{&quot;file&quot;:&quot;bower_components\\vaadin-context-menu\\vaadin-context-menu.html&quot;,&quot;start&quot;:{&quot;line&quot;:224,&quot;column&quot;:12},&quot;end&quot;:{&quot;line&quot;:229,&quot;column&quot;:13}},&quot;metadata&quot;:{},&quot;type&quot;:&quot;boolean&quot;,&quot;inheritedFrom&quot;:&quot;Vaadin.ContextMenuElement&quot;},{&quot;name&quot;:&quot;open-on&quot;,&quot;description&quot;:&quot;Event name to listen for opening the context menu.&quot;,&quot;sourceRange&quot;:{&quot;file&quot;:&quot;bower_components\\vaadin-context-menu\\vaadin-context-menu.html&quot;,&quot;start&quot;:{&quot;line&quot;:234,&quot;column&quot;:12},&quot;end&quot;:{&quot;line&quot;:237,&quot;column&quot;:13}},&quot;metadata&quot;:{},&quot;type&quot;:&quot;string&quot;,&quot;inheritedFrom&quot;:&quot;Vaadin.ContextMenuElement&quot;},{&quot;name&quot;:&quot;listen-on&quot;,&quot;description&quot;:&quot;The target element that&apos;s listened to for context menu opening events.\nBy default the vaadin-context-menu listens to the target&apos;s `vaadin-contextmenu`\nevents.&quot;,&quot;sourceRange&quot;:{&quot;file&quot;:&quot;bower_components\\vaadin-context-menu\\vaadin-context-menu.html&quot;,&quot;start&quot;:{&quot;line&quot;:246,&quot;column&quot;:12},&quot;end&quot;:{&quot;line&quot;:251,&quot;column&quot;:13}},&quot;metadata&quot;:{},&quot;type&quot;:&quot;HTMLElement&quot;,&quot;inheritedFrom&quot;:&quot;Vaadin.ContextMenuElement&quot;},{&quot;name&quot;:&quot;close-on&quot;,&quot;description&quot;:&quot;Event name to listen for closing the context menu.&quot;,&quot;sourceRange&quot;:{&quot;file&quot;:&quot;bower_components\\vaadin-context-menu\\vaadin-context-menu.html&quot;,&quot;start&quot;:{&quot;line&quot;:256,&quot;column&quot;:12},&quot;end&quot;:{&quot;line&quot;:260,&quot;column&quot;:13}},&quot;metadata&quot;:{},&quot;type&quot;:&quot;string&quot;,&quot;inheritedFrom&quot;:&quot;Vaadin.ContextMenuElement&quot;},{&quot;name&quot;:&quot;no-overlap&quot;,&quot;description&quot;:&quot;If true, a dropdown content is rendered without overlapping the trigger element.&quot;,&quot;sourceRange&quot;:{&quot;start&quot;:{&quot;line&quot;:31,&quot;column&quot;:24},&quot;end&quot;:{&quot;line&quot;:34,&quot;column&quot;:25}},&quot;metadata&quot;:{},&quot;type&quot;:&quot;boolean&quot;},{&quot;name&quot;:&quot;fit-into&quot;,&quot;description&quot;:&quot;The element to fit the dropdown content into.\nBy default, the window element is used.&quot;,&quot;sourceRange&quot;:{&quot;start&quot;:{&quot;line&quot;:40,&quot;column&quot;:24},&quot;end&quot;:{&quot;line&quot;:43,&quot;column&quot;:25}},&quot;metadata&quot;:{},&quot;type&quot;:&quot;Object&quot;},{&quot;name&quot;:&quot;vertical-offset&quot;,&quot;description&quot;:&quot;The pixel value to be added to the dropdown vertical position.&quot;,&quot;sourceRange&quot;:{&quot;start&quot;:{&quot;line&quot;:48,&quot;column&quot;:24},&quot;end&quot;:{&quot;line&quot;:51,&quot;column&quot;:25}},&quot;metadata&quot;:{},&quot;type&quot;:&quot;number&quot;},{&quot;name&quot;:&quot;horizontal-offset&quot;,&quot;description&quot;:&quot;The pixel value to be added to the dropdown horizontal position.&quot;,&quot;sourceRange&quot;:{&quot;start&quot;:{&quot;line&quot;:56,&quot;column&quot;:24},&quot;end&quot;:{&quot;line&quot;:59,&quot;column&quot;:25}},&quot;metadata&quot;:{},&quot;type&quot;:&quot;number&quot;}],&quot;events&quot;:[{&quot;type&quot;:&quot;CustomEvent&quot;,&quot;name&quot;:&quot;opened-changed&quot;,&quot;description&quot;:&quot;Fired when the `opened` property changes.&quot;,&quot;metadata&quot;:{},&quot;inheritedFrom&quot;:&quot;Vaadin.ContextMenuElement&quot;}],&quot;styling&quot;:{&quot;cssVariables&quot;:[],&quot;selectors&quot;:[]},&quot;slots&quot;:[],&quot;tagname&quot;:&quot;spine-context-menu&quot;}"
+                            id="spine-context-menu"></iron-doc-element>
+
+  <div id="demo">
+    <iframe allowfullscreen></iframe>
+    <div class="demo-placeholder">Loading demo...</div>
+  </div>
+</body>
+
+<script>
+  document.addEventListener('scroll', handleScroll);
+
+  document.querySelector('#header > button').setAttribute('active', 'true');
+
+  const demoIframe = document.querySelector('#demo > iframe');
+  const demoSrc = window.location.href + 'demo/index.html';
+  demoIframe.src = demoSrc;
+
+  let activeElement = document.body.querySelector(`#spine-context-menu`);
+  activeElement.style.display = 'block';
+
+  checkDemoSource();
+
+  function handleTabChange(event) {
+    const activeTab = document.querySelector('#header > button[active="true"]');
+    const nextContentId = event.target.getAttribute('contentid');
+    if (activeTab !== event.target && nextContentId) {
+      const nextTabContent = document.querySelector(`#${nextContentId}`);
+      nextTabContent.style.display = 'block';
+      activeElement.style.display = 'none';
+      activeElement = nextTabContent;
+
+      activeTab.setAttribute('active', 'false');
+      event.target.setAttribute('active', 'true');
+    }
+  }
+
+  function handleScroll() {
+    const header = document.body.querySelector('#header');
+    if (activeElement.getBoundingClientRect().top < 0) {
+      header.setAttribute('shadowbelow', 'true');
+    } else {
+      header.setAttribute('shadowbelow', 'false');
+    }
+  }
+
+  function checkDemoSource() {
+    const xmlHttp = new XMLHttpRequest();
+    xmlHttp.onreadystatechange = () => {
+      if (xmlHttp.readyState === 4) {
+        if (xmlHttp.status !== 200) {
+          const demoNode = document.body.querySelector('#demo');
+          document.body.querySelector('.demo-placeholder').innerText = 'No demo found';
+          demoNode.removeChild(demoIframe);
+        } else {
+          const demoPlaceholder = document.body.querySelector('.demo-placeholder');
+          demoPlaceholder.parentNode.removeChild(demoPlaceholder);
+        }
+      }
+    };
+    xmlHttp.open("HEAD", demoSrc, true);
+    xmlHttp.send(null);
+  }
+</script>
+</html>

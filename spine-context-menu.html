@@ -1,127 +1,176 @@
-<link rel="import" href="../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../bower_components/vaadin-context-menu/vaadin-context-menu.html">
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../vaadin-context-menu/vaadin-context-menu.html">
 
 <dom-module id="spine-context-menu">
     <script>
-        /**
-         * A context-menu element based on the `vaadin-context-menu`.
-         *
-         * Expands parent functionality adding an ability to adjust position
-         * relative to the viewport borders (i.e. when open near the viewport borders).
-         *
-         * This element is intended to handle the stacking contexts problem
-         * (@see https://github.com/PolymerElements/paper-menu-button/issues/9#issuecomment-199478430 ,
-         *  https://github.com/PolymerElements/iron-overlay-behavior/pull/155).
-         * If no stacking contexts expected, use `analyzer-dropdown-menu` instead.
-         */
-        class SpineContextMenu extends Vaadin.ContextMenuElement {
-            static get is() {
-                return 'spine-context-menu';
-            }
+        {
+            /**
+             * An extension of the [`vaadin-context-menu`](https://github.com/vaadin/vaadin-context-menu)
+             * with enhanced positioning and keyboard control.
+             *
+             * Expands parent functionality adding an ability to adjust position
+             * relative to the viewport borders (i.e. when open near the viewport borders).
+             *
+             * This element is intended to handle the stacking contexts problem
+             * (for details see GitHub [issue](https://github.com/PolymerElements/paper-menu-button/issues/9#issuecomment-199478430),
+             *  and [PR](https://github.com/PolymerElements/iron-overlay-behavior/pull/155)).
+             *
+             * @customElement
+             * @polymer
+             * @demo demo/index.html
+             */
+            class SpineContextMenu extends Vaadin.ContextMenuElement {
+                static get is() {
+                    return 'spine-context-menu';
+                }
 
-            static get properties() {
-                return {
-                    /**
-                     * An indent in pixels between the target element and the popup.
-                     * Default value: 8px;
-                     */
-                    indent: {
-                        type: Number,
-                        value: 8
+                static get properties() {
+                    return {
+                        /**
+                         * If true, a dropdown content is rendered without overlapping the trigger element.
+                         */
+                        noOverlap: {
+                            type: Boolean,
+                            value: false
+                        },
+
+                        /**
+                         * The element to fit the dropdown content into.
+                         * By default, the window element is used.
+                         */
+                        fitInto: {
+                            type: Object,
+                            value: window
+                        },
+
+                        /**
+                         * The pixel value to be added to the dropdown vertical position.
+                         */
+                        verticalOffset: {
+                            type: Number,
+                            value: 0
+                        },
+
+                        /**
+                         * The pixel value to be added to the dropdown horizontal position.
+                         */
+                        horizontalOffset: {
+                            type: Number,
+                            value: 0
+                        }
                     }
                 }
-            }
 
-            constructor() {
-                super();
-                this._resizeHandler = this._handleResize.bind(this);
-                this._keydownHandler = this._handleKeyDown.bind(this);
-                window.addEventListener("resize", this._resizeHandler);
-                window.addEventListener("keydown", this._keydownHandler, true);
-            }
-
-            disconnectedCallback() {
-                super.disconnectedCallback();
-                window.removeEventListener("resize", this._resizeHandler);
-                window.removeEventListener("keydown", this._keydownHandler);
-            }
-
-            open(event) {
-                if (!this.opened) {
-                    super.open(event);
-                    this._alignPopup(event);
-                } else {
-                    this.close();
+                constructor() {
+                    super();
+                    this._resizeHandler = this._handleResize.bind(this);
+                    this._keydownHandler = this._handleKeyDown.bind(this);
+                    window.addEventListener("resize", this._resizeHandler);
+                    window.addEventListener("keydown", this._keydownHandler, true);
                 }
-            }
 
-            _alignPopup(event) {
-                const targetCords = event.target.getBoundingClientRect();
-                const menuElement = document.querySelector("vaadin-context-menu-overlay");
-                const container = menuElement.parentNode;
-                const indent = this.indent;
+                disconnectedCallback() {
+                    super.disconnectedCallback();
+                    window.removeEventListener("resize", this._resizeHandler);
+                    window.removeEventListener("keydown", this._keydownHandler);
+                }
 
-                if (menuElement) {
-                    const content = menuElement.$.content;
-                    const width = this._elementMaxWidth(content);
-                    const height = this._elementMaxHeight(content);
-
-                    if (targetCords.left + width + indent < container.clientWidth) {
-                        menuElement.style.left = targetCords.left + "px";
-                    } else if (targetCords.right - width - indent > 0) {
-                        menuElement.style.left = targetCords.right - content.scrollWidth + "px";
+                open(event) {
+                    if (!this.opened) {
+                        super.open(event);
+                        this._position(event);
                     } else {
-                        menuElement.style.left = indent + "px";
+                        this.close();
                     }
+                }
 
-                    if (targetCords.bottom + height + indent * 2 < container.clientHeight) {
-                        menuElement.style.top = targetCords.bottom + indent + "px";
-                    } else if (targetCords.top - height - indent * 2 > 0) {
-                        menuElement.style.top = targetCords.top - content.scrollHeight - indent + "px";
+                _position(event) {
+                    const dropdown = document.querySelector("vaadin-context-menu-overlay");
+                    if (dropdown) {
+                        const targetCords = this.noOverlap
+                            ? event.target.getBoundingClientRect()
+                            : this._eventCordsToTarget(event);
+                        this._positionAroundTarget(targetCords, dropdown);
+                    }
+                }
+
+                _positionAroundTarget(targetCords, dropdown) {
+                    const content = dropdown.$.content;
+
+                    const width = content.scrollWidth;
+                    let left;
+                    let top;
+                    if (targetCords.left + width + this.horizontalOffset < this.fitInto.innerWidth) {
+                        left = targetCords.left + this.horizontalOffset;
+                    } else if (targetCords.right - width + this.horizontalOffset > 0) {
+                        left = targetCords.right - width + this.horizontalOffset;
                     } else {
-                        menuElement.style.top = indent + "px";
+                        left = Math.max(this.horizontalOffset, 0);
+                    }
+
+                    const height = content.scrollHeight;
+                    if (targetCords.bottom + height + this.verticalOffset < this.fitInto.innerHeight) {
+                        top = targetCords.bottom + this.verticalOffset;
+                    } else if (targetCords.top - height + this.verticalOffset > 0) {
+                        top = targetCords.top - height + this.verticalOffset;
+                    } else {
+                        top = Math.max(this.verticalOffset, 0);
+                    }
+
+                    dropdown.style.top = `${top}px`;
+                    dropdown.style.left = `${left}px`;
+                    dropdown.$.overlay.style['max-width'] = 'initial';
+                }
+
+                _eventCordsToTarget(event) {
+                    let cords;
+
+                    if (this._isButtonEvent(event)) {
+                        cords = event.target.getBoundingClientRect();
+                    } else {
+                        const x = this._getEventCoordinate(event, 'x');
+                        const y = this._getEventCoordinate(event, 'y');
+                        cords = {};
+                        // Simulates 1-pixel target on click coordinates.
+                        cords.left = cords.right = x;
+                        cords.top = cords.bottom = y;
+                    }
+
+                    return cords;
+                }
+
+                _isButtonEvent(event) {
+                    return this.openOn === 'click'
+                        ? event.screenY === 0 //The case when `click` event is produced by a button when pressed using the keyboard.
+                        : event.constructor.name === 'KeyboardEvent';
+                }
+
+                _handleResize() {
+                    if (this.opened) {
+                        this.close();
                     }
                 }
-            }
 
-            _elementMaxWidth(elem) {
-                return this._getElementMaxSize(elem, "Width");
-            }
+                _handleKeyDown(event) {
+                    if (this.opened && (this._isTabKey(event) || this._isEscKey(event))) {
+                        this.close();
+                    }
+                }
 
-            _elementMaxHeight(elem) {
-                return this._getElementMaxSize(elem, "Height");
-            }
+                _isTabKey(event) {
+                    return event.key.toLowerCase() === "tab" ||
+                        (event.detail && event.detail.key.toLowerCase() === "tab") ||
+                        event.keyCode === 9;
+                }
 
-            _getElementMaxSize(elem, sizeParam) {
-                return Math.max(elem['scroll' + sizeParam], elem['client' + sizeParam]);
-            }
-
-            _handleResize() {
-                if (this.opened) {
-                    this.close();
+                _isEscKey(event) {
+                    return event.key === "Escape" ||
+                        (event.detail && event.detail.key === "Escape") ||
+                        event.keyCode === 27;
                 }
             }
 
-            _handleKeyDown(event) {
-                if (this._isTabKey(event) || this._isEscKey(event)) {
-                    this.close();
-                }
-            }
-
-            _isTabKey(event) {
-                return event.key.toLowerCase() === "tab" ||
-                    (event.detail && event.detail.key.toLowerCase() === "tab") ||
-                    event.keyCode === 9;
-            }
-
-            _isEscKey(event) {
-                return event.key === "Escape" ||
-                    (event.detail && event.detail.key === "Escape") ||
-                    event.keyCode === 27;
-            }
+            window.customElements.define(SpineContextMenu.is, SpineContextMenu);
         }
-
-        window.customElements.define(SpineContextMenu.is, SpineContextMenu);
     </script>
 </dom-module>
-
