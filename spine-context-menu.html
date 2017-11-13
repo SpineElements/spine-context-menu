@@ -6,12 +6,14 @@
         {
             /**
              * An element to provide a contextual menu with fully customizable trigger and content.
+             * The element is able to adjust its drop-down menu position in the case when the
+             * drop-down is popping up outside of the viewport borders.
              *
-             * An extension of the [`vaadin-context-menu`](https://github.com/vaadin/vaadin-context-menu)
-             * with enhanced positioning and keyboard control.
+             * The properties `verticalOffset` and `horizontalOffset` allows customizing pop-up
+             * vertical and horizontal position.
              *
-             * Expands parent functionality adding an ability to adjust position
-             * relative to the viewport borders (i.e. when open near the viewport borders).
+             * This element extends [`vaadin-context-menu`](https://github.com/vaadin/vaadin-context-menu)
+             * enhancing its positioning and keyboard control.
              *
              * This element is intended to handle the stacking contexts problem
              * (for details see GitHub [issue](https://github.com/PolymerElements/paper-menu-button/issues/9#issuecomment-199478430),
