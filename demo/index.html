@@ -15,6 +15,9 @@
 
     <custom-style>
         <style is="custom-style" include="demo-pages-shared-styles">
+            spine-context-menu {
+                padding: 8px;
+            }
         </style>
     </custom-style>
 </head>
@@ -23,7 +26,7 @@
     <h3>Basic spine-context-menu demo</h3>
     <demo-snippet>
         <template>
-            <spine-context-menu>
+            <spine-context-menu class="large">
                 <template>
                     <div style="width: 200px; height: 200px; background: rebeccapurple;
                         line-height: 200px; text-align: center; color: white;">Dropdown content
@@ -38,16 +41,43 @@
 </div>
 
 <div class="vertical-section-container centered">
-    <h3>Target spine-context-menu demo</h3>
+    <h3>Positioning</h3>
     <demo-snippet>
         <template>
-            <spine-context-menu no-overlap vertical-offset="8" open-on="click" selector="button">
+            <spine-context-menu open-on="click" selector="button">
                 <template>
                     <div style="width: 200px; height: 200px; background: rebeccapurple;
-                        line-height: 200px; text-align: center; color: white;">Dropdown content
+                    line-height: 200px; text-align: center; color: white;">Dropdown content
                     </div>
                 </template>
-                <button>Open</button>
+                <button>Open (default)</button>
+            </spine-context-menu>
+
+            <spine-context-menu no-overlap open-on="click" selector="button">
+                <template>
+                    <div style="width: 200px; height: 200px; background: rebeccapurple;
+                    line-height: 200px; text-align: center; color: white;">Dropdown content
+                    </div>
+                </template>
+                <button>Open without overlapping</button>
+            </spine-context-menu>
+
+            <spine-context-menu no-overlap vertical-offset="20" open-on="click" selector="button">
+                <template>
+                    <div style="width: 200px; height: 200px; background: rebeccapurple;
+                    line-height: 200px; text-align: center; color: white;">Dropdown content
+                    </div>
+                </template>
+                <button>Open with vertical offset</button>
+            </spine-context-menu>
+
+            <spine-context-menu no-overlap horizontal-offset="20" open-on="click" selector="button">
+                <template>
+                    <div style="width: 200px; height: 200px; background: rebeccapurple;
+                    line-height: 200px; text-align: center; color: white;">Dropdown content
+                    </div>
+                </template>
+                <button>Open with horizontal offset</button>
             </spine-context-menu>
         </template>
     </demo-snippet>
