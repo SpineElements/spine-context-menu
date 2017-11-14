@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+  <title>spine-context-menu test</title>
+
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../../web-component-tester/browser.js"></script>
+
+  <link rel="import" href="../../iron-test-helpers/mock-interactions.html">
+  <link rel="import" href="../spine-context-menu.html">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Roboto, Noto, sans-serif;
+    }
+
+    #main {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+<test-fixture id="main">
+  <template>
+    <spine-context-menu selector="div" open-on="click">
+      <template>
+        <div style="width: 100px; height: 100px;"></div>
+      </template>
+      <div id="anchor"
+           style="width: 50px; height: 50px;">
+      </div>
+    </spine-context-menu>
+  </template>
+</test-fixture>
+
+<test-fixture id="top-right">
+  <template>
+    <spine-context-menu selector="div" open-on="click">
+      <template>
+        <div style="width: 100px; height: 100px;"></div>
+      </template>
+      <div id="anchor"
+           style="width: 50px; height: 50px; position: fixed; right: 0; top: 0;">
+      </div>
+    </spine-context-menu>
+  </template>
+</test-fixture>
+
+<test-fixture id="top-left">
+  <template>
+    <spine-context-menu selector="div" open-on="click">
+      <template>
+        <div style="width: 100px; height: 100px;"></div>
+      </template>
+      <div id="anchor"
+           style="width: 50px; height: 50px; position: fixed; left: 0; top: 0;">
+      </div>
+    </spine-context-menu>
+  </template>
+</test-fixture>
+
+<test-fixture id="bottom-right">
+  <template>
+    <spine-context-menu selector="div" open-on="click">
+      <template>
+        <div style="width: 100px; height: 100px;"></div>
+      </template>
+      <div id="anchor"
+           style="width: 50px; height: 50px; position: fixed; right: 0; bottom: 0;">
+      </div>
+    </spine-context-menu>
+  </template>
+</test-fixture>
+
+<test-fixture id="bottom-left">
+  <template>
+    <spine-context-menu selector="div" open-on="click">
+      <template>
+        <div style="width: 100px; height: 100px;"></div>
+      </template>
+      <div id="anchor"
+           style="width: 50px; height: 50px; position: fixed; left: 0; bottom: 0;">
+      </div>
+    </spine-context-menu>
+  </template>
+</test-fixture>
+
+<test-fixture id="escape-button">
+  <template>
+    <spine-context-menu selector="div" open-on="click">
+      <template>
+        <div style="width: 100px; height: 100px;"></div>
+      </template>
+      <div id="anchor"
+           style="width: 50px; height: 50px; position: fixed; right: 0; bottom: 0;">
+      </div>
+    </spine-context-menu>
+  </template>
+</test-fixture>
+
+<script>
+    suite('spine-context-menu', function() {
+        test('should instantiate the element', () => {
+            const element = fixture('main');
+            assert.equal(element.constructor.is, 'spine-context-menu');
+        });
+
+        test('should close on `tab` button click', done => {
+            testCloseButton(fixture('main'), 'Tab', done);
+        });
+
+        test('should close on `escape` button click', done => {
+            testCloseButton(fixture('escape-button'), 'Escape', done);
+        });
+
+        test('should display correctly near the view port edges (top-left)', done => {
+            testEdgeCase(fixture('top-left'), done);
+        });
+
+        test('should display correctly near the view port edges (top-right)', done => {
+            testEdgeCase(fixture('top-right'), done);
+        });
+
+        test('should display correctly near the view port edges (bottom-left)', done => {
+            testEdgeCase(fixture('bottom-left'), done);
+        });
+
+        test('should display correctly near the view port edges (bottom-right)', done => {
+            testEdgeCase(fixture('bottom-right'), done);
+        });
+
+        function testEdgeCase(element, done) {
+            const expectedHeight = 100;
+            const expectedWidth = 100;
+            const anchor = element.querySelector("#anchor");
+            MockInteractions.tap(anchor);
+
+            flush(() => {
+                const overlayContent = document.querySelector('vaadin-context-menu-overlay').$.content;
+                expect(overlayContent.clientHeight).to.eql(expectedHeight);
+                expect(overlayContent.clientWidth).to.eql(expectedWidth);
+                done();
+            });
+        }
+
+        function testCloseButton(element, buttonKey, done) {
+            const anchor = element.querySelector('#anchor');
+            MockInteractions.tap(anchor);
+            MockInteractions.keyEventOn(element, 'keydown', null, null, buttonKey);
+
+            flush(() => {
+                expect(document.querySelector('vaadin-context-menu-overlay')).to.eql(null);
+                done();
+            });
+        }
+    });
+</script>
+</body>
+</html>
+

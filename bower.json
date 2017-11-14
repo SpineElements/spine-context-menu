@@ -1,0 +1,38 @@
+{
+  "name": "spine-context-menu",
+  "description": "An extension of the `vaadin-context-menu` with enhanced positioning and keyboard control",
+  "main": "spine-context-menu.html",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/SpineElements/spine-context-menu",
+  "keywords": [
+    "web-components",
+    "web-component",
+    "polymer",
+    "spine",
+    "context-menu",
+    "context",
+    "dropdown-menu",
+    "menu"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "wct.conf.js"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^2.0.0",
+    "vaadin-context-menu": "3.0.0-beta1"
+  },
+  "devDependencies": {
+    "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^2.0.0",
+    "web-component-tester": "Polymer/web-component-tester#^6.0.0",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0",
+    "iron-doc-viewer": "^3.0.4",
+    "iron-test-helpers": "^2.0.0"
+  },
+  "resolutions": {
+    "polymer": "^2.0.0"
+  }
+}
